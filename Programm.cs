@@ -1,87 +1,95 @@
 using System;
 
-public class GenericArray<T>
+namespace ConsoleApp
 {
-    private T[] array;
-
-    public GenericArray(int size)
+    internal class Program
     {
-        array = new T[size];
-    }
-
-    public void Add(T item)
-    {
-        for (int i = 0; i < array.Length; i++)
+        static void Main(string[] args)
         {
-            if (array[i] == null)
+            ArrayG<int> intArray = new ArrayG<int>(3);
+            intArray.Add(83);
+            intArray.Add(37);
+            intArray.Add(1);
+
+            Console.WriteLine(intArray.Get());
+
+            intArray.Remove(0);
+
+            Console.WriteLine(intArray.Get());
+
+            intArray.Remove(5);
+
+            Console.WriteLine(intArray.Get(5));
+
+            Console.WriteLine(intArray.Length());
+
+            ArrayG<double> doubleArray = new ArrayG<double>(3);
+            doubleArray.Add(8.3);
+            doubleArray.Add(37.32);
+            doubleArray.Add(1.15);
+            
+            Console.WriteLine(doubleArray.Get());
+            
+            doubleArray.Remove(0);
+            
+            Console.WriteLine(doubleArray.Get());
+            
+            ArrayG<string> stringArray = new ArrayG<string>(3);
+            stringArray.Add("Первый");
+            stringArray.Add("Второй");
+            stringArray.Add("Третий");
+            
+            Console.WriteLine(stringArray.Get());
+            
+            stringArray.Remove(0);
+            
+            Console.WriteLine(stringArray.Get());
+        }
+    }
+    public class ArrayG<T>
+    {
+        private int size;
+        private T[] array;
+
+        public ArrayG(uint size)
+        {
+            array = new T[size];
+            size = 0;
+        }
+        public void Add(T item)
+        {
+            if (size < array.Length)
             {
-                array[i] = item;
-                return;
+                array[size] = item;
+                size++;
             }
+            else
+                Console.WriteLine("Массив переполнен!");
         }
-        throw new Exception("Массив полон");
-    }
-
-    public void Remove(int index)
-    {
-        if (index < 0 || index >= array.Length)
+        public void Remove(uint index)
         {
-            throw new Exception("Недопустимый индекс");
+            if (index <= size)
+            {
+                array[index] = default(T);
+            }
+            else
+                Console.WriteLine("Некорректный индекс!");
         }
-        array[index] = default(T);
-    }
-
-    public T Get(int index)
-    {
-        if (index < 0 || index >= array.Length)
+        public T Get(uint index)
         {
-            throw new Exception("Недопустимый индекс");
+            if (index <= size)
+                return array[index];
+            else
+                return default(T);
         }
-        return array[index];
-    }
-
-    public int Length
-    {
-        get { return array.Length; }
-    }
-}
-
-class Program
-{
-    static void Main(string[] args)
-    {
-        GenericArray<int> intArray = new GenericArray<int>(5);
-        intArray.Add(1);
-        intArray.Add(2);
-        intArray.Add(3);
-        intArray.Add(4);
-        intArray.Add(5);
-
-        Console.WriteLine("Массив целых чисел:");
-        for (int i = 0; i < intArray.Length; i++)
+        public string Get()
         {
-            Console.WriteLine(intArray.Get(i));
+            string str = "";
+            return str = string.Join(", ", array);
         }
-
-        GenericArray<string> stringArray = new GenericArray<string>(3);
-        stringArray.Add("Hello");
-        stringArray.Add("World");
-        stringArray.Add("C#");
-
-        Console.WriteLine("Массив строк:");
-        for (int i = 0; i < stringArray.Length; i++)
+        public int Length()
         {
-            Console.WriteLine(stringArray.Get(i));
-        }
-
-        GenericArray<double> doubleArray = new GenericArray<double>(2);
-        doubleArray.Add(1.0);
-        doubleArray.Add(2.0);
-
-        Console.WriteLine("Массив чисел с плавающей точкой:");
-        for (int i = 0; i < doubleArray.Length; i++)
-        {
-            Console.WriteLine(doubleArray.Get(i));
+            return size;
         }
     }
 }
